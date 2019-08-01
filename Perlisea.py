@@ -216,7 +216,7 @@ def retourmenu():
 		time.sleep(1.0)
 		#debut code username search
 	elif choice == "4":
-		print("Invitation : https://discord.gg/JSaADXF")
+		print("Invitation : https://discord.gg/Zu76Wfp")
 		input("[*]>> Retournez au menu !")
 		retourmenu()
 	elif choice == "100":
