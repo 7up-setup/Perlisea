@@ -63,7 +63,6 @@ def retourmenu():
 
 
 
-	time.sleep(2.0)
 	#MENU
 
 
@@ -71,7 +70,7 @@ def retourmenu():
 
 		Ville = input("Ville : ")
 		personne = input("Personne : ")
-		url = ("https://www.pagesjaunes.fr/recherche/")
+		url = ("https://www.pagesjaunes.fr/pagesblanches/recherche?quoiqui=")
 		Search(personne,Ville,url)
 		retourmenu()
 

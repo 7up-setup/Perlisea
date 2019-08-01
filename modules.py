@@ -24,7 +24,7 @@ cent = ("100")
 star = ("*")	
 
 def Search(personne,Ville,url):
-	if url == ("https://www.pagesjaunes.fr/recherche/"):
+	if url == ("https://www.pagesjaunes.fr/recherche/") or ("https://www.infoannuaire.fr/res/search?q="):
 		print("["+ Fore.MAGENTA + star + Fore.RESET + "] Recherche pour ( " + personne + " à "+ Ville +" ) en cours ....")
 	else:
 		print("["+ Fore.MAGENTA + star + Fore.RESET + "] Recherche de ( " + personne + "  ) en cours ....")
@@ -36,9 +36,9 @@ def Search(personne,Ville,url):
 			'Accept-Language': 'en-US,en;q=0.9',
 			'Pragma': 'no-cache'
 		}
-	if url == ("https://www.pagesjaunes.fr/recherche/"):
+	if url == ("https://www.pagesjaunes.fr/pagesblanches/recherche?quoiqui="):
 
-		url=("https://www.pagesjaunes.fr/recherche/"+Ville+"/"+personne)
+		url=("https://www.pagesjaunes.fr/pagesblanches/recherche?quoiqui="+personne+"&ou="+Ville+"&proximite=0")
 		requete = requests.get(url, headers=headers)
 		page = requete.content
 		features="html.parser"
@@ -47,6 +47,7 @@ def Search(personne,Ville,url):
 			nameList = soup.find_all("a", {"class": "denomination-links pj-lb pj-link"})
 			addressList = soup.find_all("a", {"class": "adresse pj-lb pj-link"})
 			numList = soup.find_all("strong", {"class": "num"})
+
 		except AttributeError:
 			pass
 
@@ -83,15 +84,66 @@ def Search(personne,Ville,url):
 				pass
 
 		table_instance = SingleTable(TABLE_DATA, title)
+		url=("https://www.infoannuaire.fr/res/search?q="+personne+"&w="+Ville)
+		requete = requests.get(url, headers=headers)
+		page = requete.content
+		features="html.parser"
+		soup = BeautifulSoup(page)	
+		try:
+			nameList = soup.find_all("div", {"class": "nom-prenom__response"})
+			addressList = soup.find_all("div", {"class": "adresse__response"})
+
+
+
+		except AttributeError:
+			pass
+
+		namesList2 = []
+		addressesList2 = []
+
+
+		# try:
+		for name in nameList:
+			namesList2.append(name.text.strip())
+		for addresse in addressList:
+			addressesList2.append(addresse.text.strip())
+
+		
+
+		regroup = zip(namesList2,addressesList2)
+		
+		title = " Particulier "
+
+		TABLE_DATA = [
+			('Name', 'Adresse'),
+		]
+
+		listeInfos = []
+
+		for infos in regroup:
+			
+			try:
+
+				TABLE_DATA.append(infos)
+
+			except AttributeError:
+				pass
+
+		table_instance1 = SingleTable(TABLE_DATA, title)
 		if sys.platform == 'linux2':
 				os.system('clear')
 
 		elif sys.platform == 'win32':
 				os.system('cls')
 
-		print("["+ Fore.MAGENTA + star + Fore.RESET + "] Resultat pour ( " + personne + " à "+ Ville +" ) en cours ....")
+		print("["+ Fore.MAGENTA + star + Fore.RESET + "] Resultat ...")
 		print("\n"+table_instance.table)
+		print("\n"+table_instance1.table)
 		input(":"+ Fore.RED + answ + Fore.RESET + "> Press [ENTER] to go back to main menu :")
+
+
+
+
 	else:
 		headers = {
 				'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36',
