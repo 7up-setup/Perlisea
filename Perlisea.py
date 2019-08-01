@@ -12,6 +12,7 @@ from terminaltables import SingleTable
 import requests
 import sys
 import colorama
+from modules import *
 from colorama import init, Fore,  Back,  Style
 
 r = requests.get("https://www.youtube.com")
@@ -34,16 +35,6 @@ cent = ("100")
 star = ("*")
 #bannière
 
-if sys.platform == 'linux2':
-	os.system('clear')
-
-elif sys.platform == 'win32':
-	os.system('cls')
-
-
-
-time.sleep(2.0)
-#MENU
 def retourmenu():
 	if sys.platform == 'linux2':
 				os.system('clear')
@@ -70,145 +61,27 @@ def retourmenu():
 	print("\r")
 	choice = input(":"+ Fore.RED + answ + Fore.RESET + "> ")
 
+
+
+	time.sleep(2.0)
+	#MENU
+
+
 	if choice == "1":
 
 		Ville = input("Ville : ")
 		personne = input("Personne : ")
-		print("["+ Fore.MAGENTA + star + Fore.RESET + "] Recherche pour ( " + personne + " à "+ Ville +" ) en cours ....")
-		headers = {
-				'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36',
-	    	    'referrer': 'https://google.com',
-	        	'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
-	        	'Accept-Encoding': 'utf-8',
-	        	'Accept-Language': 'en-US,en;q=0.9',
-	        	'Pragma': 'no-cache'
-	        }
-
-		url=("https://www.pagesjaunes.fr/recherche/"+Ville+"/"+personne)
-		requete = requests.get(url, headers=headers)
-		page = requete.content
-		features="html.parser"
-		soup = BeautifulSoup(page)	
-		try:
-			nameList = soup.find_all("a", {"class": "denomination-links pj-lb pj-link"})
-			addressList = soup.find_all("a", {"class": "adresse pj-lb pj-link"})
-			numList = soup.find_all("strong", {"class": "num"})
-		except AttributeError:
-			pass
-
-		namesList2 = []
-		addressesList2 = []
-		numesList2 = []
-		operatorList = []
-
-		# try:
-		for name in nameList:
-			namesList2.append(name.text.strip())
-		for addresse in addressList:
-			addressesList2.append(addresse.text.strip())
-		for num in numList: 
-			numesList2.append(num.text.strip())
-
-		regroup = zip(namesList2,addressesList2,numesList2)
-		
-		title = " Particulier "
-
-		TABLE_DATA = [
-			('Name', 'Adresse', 'Phone'),
-		]
-
-		listeInfos = []
-
-		for infos in regroup:
-			
-			try:
-
-				TABLE_DATA.append(infos)
-
-			except AttributeError:
-				pass
-
-		table_instance = SingleTable(TABLE_DATA, title)
-		if sys.platform == 'linux2':
-				os.system('clear')
-
-		elif sys.platform == 'win32':
-				os.system('cls')
-
-		print("["+ Fore.MAGENTA + star + Fore.RESET + "] Resultat pour ( " + personne + " à "+ Ville +" ) en cours ....")
-		print("\n"+table_instance.table)
-		input("[*]>>Retournez au menu ")
+		url = ("https://www.pagesjaunes.fr/recherche/")
+		Search(personne,Ville,url)
 		retourmenu()
 
 		#debut code person seach
 	elif choice == "2":
 		num = input("Search a phone number : ")
-		print("["+ Fore.MAGENTA + star + Fore.RESET + "] Recherche pour ( " + num + " ) en cours ....")
+		Search(num,"rien","https://www.pagesjaunes.fr/annuaireinverse/recherche?quoiqui=")
 		time.sleep(1.0)
-		headers = {
-				'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36',
-	    	    'referrer': 'https://google.com',
-	        	'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
-	        	'Accept-Encoding': 'utf-8',
-	        	'Accept-Language': 'en-US,en;q=0.9',
-	        	'Pragma': 'no-cache'
-	        }
-		url = ("https://www.pagesjaunes.fr/annuaireinverse/recherche?quoiqui=")
-		requete = requests.get(url+num, headers=headers)
-		
-
-		page = requete.content
-		features="html.parser"
-		soup = BeautifulSoup(page)	
-		try:
-			nameList = soup.find_all("a", {"class": "denomination-links pj-lb pj-link"})
-			addressList = soup.find_all("a", {"class": "adresse pj-lb pj-link"})
-			numList = soup.find_all("strong", {"class": "num"})
-		except AttributeError:
-			pass
-
-		namesList2 = []
-		addressesList2 = []
-		numesList2 = []
-		operatorList = []
-
-		# try:
-		for name in nameList:
-			namesList2.append(name.text.strip())
-		for addresse in addressList:
-			addressesList2.append(addresse.text.strip())
-		for num in numList: 
-			numesList2.append(num.text.strip())
-
-		regroup = zip(namesList2,addressesList2,numesList2)
-		
-		title = " Particulier "
-
-		TABLE_DATA = [
-			('Name', 'Adresse', 'Phone'),
-		]
-
-		listeInfos = []
-
-		for infos in regroup:
-			
-			try:
-
-				TABLE_DATA.append(infos)
-
-			except AttributeError:
-				pass
-
-		table_instance = SingleTable(TABLE_DATA, title)
-		if sys.platform == 'linux2':
-				os.system('clear')
-
-		elif sys.platform == 'win32':
-			os.system('cls')
-		print("["+ Fore.MAGENTA + star + Fore.RESET + "] Resultat pour ( " + num + " ) en cours ....")
-		print("\n"+table_instance.table)
-		input("[*]>>Retournez au menu ")
 		retourmenu()
+		
 
 	elif choice == "3":
 		id = input("Search an username : ")
